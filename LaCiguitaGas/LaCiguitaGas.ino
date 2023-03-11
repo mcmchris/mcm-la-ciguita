@@ -12,7 +12,7 @@
 */
 
 #include "main.h"
-#include "bsec.h"  // Click to install library: http://librarymanager/All#bsec
+#include "bsec.h"  // Click to download library: https://github.com/BoschSensortec/BSEC-Arduino-library then install it as .ZIP
 #include <Servo.h>
 
 #define PIN_VBAT WB_A0  // Pin where the battery voltage is measured
@@ -125,7 +125,7 @@ void setup(void) {
   readVBAT();
 
   //Initialize Sensor Communication
-  iaqSensor.begin(BME680_I2C_ADDR_PRIMARY, Wire);
+  iaqSensor.begin(BME68X_I2C_ADDR_LOW, Wire);
   //Check sensor status
   checkIaqSensorStatus();
 
@@ -204,14 +204,14 @@ void loop(void) {
             }
           }
 
-          if (gas < BAD_Gas && vbat_per > 25) {  // If the Gas resistance is lower than the BAD_Gas param, turn down the servo to DIED_DG
+          if (gas < BAD_GAS && vbat_per > 25) {  // If the Gas resistance is lower than the BAD_Gas param, turn down the servo to DIED_DG
             INTERVAL = INTERVAL_BAD;
             for (pos; pos <= DIED_DG; pos += 1) {  // goes to DIED position
               // in steps of 1 degree
               myservo.write(pos);  // tell servo to go to position in variable 'pos'
               delay(15);           // waits 15ms for the servo to reach the position
             }
-          } else if (co2 >= BAD_Gas && vbat_per > 25) {  // If the Gas resistance is higher than the BAD_Gas param, turn up the servo to ALIVE_DG
+          } else if (gas >= BAD_GAS && vbat_per > 25) {  // If the Gas resistance is higher than the BAD_Gas param, turn up the servo to ALIVE_DG
             INTERVAL = INTERVAL_GOOD;
             for (pos; pos >= ALIVE_DG; pos -= 1) {  // goes to ALIVE position
               // in steps of 1 degree
@@ -240,16 +240,18 @@ void loop(void) {
 
 // Helper function definitions
 void checkIaqSensorStatus(void) {
-  if (iaqSensor.status != BSEC_OK) {
-    if (iaqSensor.status < BSEC_OK) {
+  if (iaqSensor.bsecStatus != BSEC_OK) {
+    if (iaqSensor.bsecStatus < BSEC_OK) {
+
       for (;;)
         errLeds(); /* Halt in case of failure */
     } else {
     }
   }
 
-  if (iaqSensor.bme680Status != BME680_OK) {
-    if (iaqSensor.bme680Status < BME680_OK) {
+  if (iaqSensor.bme68xStatus != BME68X_OK) {
+    if (iaqSensor.bme68xStatus < BME68X_OK) {
+
       for (;;)
         errLeds(); /* Halt in case of failure */
     } else {

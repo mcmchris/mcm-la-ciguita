@@ -13,7 +13,7 @@
 */
 
 
-#include "bsec.h"  // Click to install library: http://librarymanager/All#bsec
+#include "bsec.h"  // Click to download library: https://github.com/BoschSensortec/BSEC-Arduino-library then install it as .ZIP
 #include <Servo.h>
 
 // Comment the next line if you want DEBUG output. But the power savings are not as good then!!!!!!!
@@ -104,7 +104,7 @@ void setup(void) {
   readVBAT();
 
   //Initialize Sensor Communication
-  iaqSensor.begin(BME680_I2C_ADDR_PRIMARY, Wire);
+  iaqSensor.begin(BME68X_I2C_ADDR_LOW, Wire);
 
   //Check sensor status
   checkIaqSensorStatus();
@@ -197,8 +197,8 @@ void loop(void) {
 
 // Helper function definitions
 void checkIaqSensorStatus(void) {
-  if (iaqSensor.status != BSEC_OK) {
-    if (iaqSensor.status < BSEC_OK) {
+  if (iaqSensor.bsecStatus != BSEC_OK) {
+    if (iaqSensor.bsecStatus < BSEC_OK) {
 
       for (;;)
         errLeds(); /* Halt in case of failure */
@@ -206,8 +206,8 @@ void checkIaqSensorStatus(void) {
     }
   }
 
-  if (iaqSensor.bme680Status != BME680_OK) {
-    if (iaqSensor.bme680Status < BME680_OK) {
+  if (iaqSensor.bme68xStatus != BME68X_OK) {
+    if (iaqSensor.bme68xStatus < BME68X_OK) {
 
       for (;;)
         errLeds(); /* Halt in case of failure */
