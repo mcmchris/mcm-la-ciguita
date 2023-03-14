@@ -37,6 +37,7 @@ unsigned long previousMillis = 0;  // Will store last time the Servo was turned.
 
 
 #define BAD_CO2 1000  //Constant of CO2 ppm that will considered to trigger the Servo.
+#define GOOD_CO2 800  //Constant of CO2 ppm that will considered to trigger the Servo.
 
 #define INTERVAL_GOOD 10 * 60 * 1000 //Sampling interval when the air is clean in (ms)
 #define INTERVAL_BAD 5 * 60 * 1000 //Sampling interval when the air is polluted in (ms)
@@ -182,7 +183,7 @@ void loop(void) {
         myservo.write(pos);  // tell servo to go to position in variable 'pos'
         delay(15);           // waits 15ms for the servo to reach the position
       }
-    } else if (co2 <= BAD_CO2 && vbat_per > 25) {  // If the CO2 level returns to normal, turn up the servo to ALIVE_DG
+    } else if (co2 <= GOOD_CO2 && vbat_per > 25) {  // If the CO2 level returns to normal, turn up the servo to ALIVE_DG
       INTERVAL = INTERVAL_GOOD;
       for (pos; pos >= ALIVE_DG; pos -= 1) {  // goes to ALIVE position
         // in steps of 1 degree
